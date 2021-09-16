@@ -1,0 +1,61 @@
+{
+    "private": true,
+    "name": "@solana/wallet-adapter-angular-ui",
+    "version": "0.1.0",
+    "author": "Solana Maintainers <maintainers@solana.foundation>",
+    "repository": "https://github.com/solana/wallet-adapter",
+    "license": "Apache-2.0",
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "lib",
+        "src"
+    ],
+    "scripts": {
+        "clean": "rm -rf lib/*",
+        "build": "yarn clean && ng build angular-ui --configuration=production"
+    },
+    "peerDependencies": {
+        "@angular/core": "^12.2.0",
+        "@ngrx/component-store": "^12.4.0",
+        "@solana/wallet-adapter-base": "^0.5.2",
+        "@solana/wallet-adapter-wallets": "^0.9.0",
+        "@solana/wallet-adapter-angular": "0.1.0",
+        "@solana/web3.js": "^1.20.0",
+        "rxjs": "~6.6.0",
+        "@angular/animations": "~12.2.0",
+        "@angular/cdk": "^12.2.5",
+        "@angular/common": "~12.2.0",
+        "@angular/forms": "~12.2.0",
+        "@angular/material": "^12.2.5",
+        "@angular/platform-browser": "~12.2.0",
+        "@angular/platform-browser-dynamic": "~12.2.0",
+        "zone.js": "~0.11.4"
+    },
+    "dependencies": {
+        "tslib": "^2.3.0"
+    },
+    "devDependencies": {
+        "@angular-devkit/build-angular": "~12.2.3",
+        "@angular/cli": "~12.2.3",
+        "@angular/compiler": "^12.2.3",
+        "@angular/compiler-cli": "~12.2.0",
+        "@angular/core": "^12.2.0",
+        "@ngrx/component-store": "^12.4.0",
+        "@solana/wallet-adapter-angular": "0.1.0",
+        "@solana/wallet-adapter-base": "^0.5.2",
+        "@solana/wallet-adapter-wallets": "^0.9.0",
+        "@solana/web3.js": "^1.20.0",
+        "ng-packagr": "^12.1.1",
+        "rxjs": "~6.6.0",
+        "typescript": "4.3.5"
+    },
+    "main": "lib/bundles/solana-wallet-adapter-angular-ui.umd.js",
+    "module": "lib/fesm2015/solana-wallet-adapter-angular-ui.js",
+    "es2015": "lib/fesm2015/solana-wallet-adapter-angular-ui.js",
+    "esm2015": "lib/esm2015/solana-wallet-adapter-angular-ui.js",
+    "fesm2015": "lib/fesm2015/solana-wallet-adapter-angular-ui.js",
+    "typings": "lib/solana-wallet-adapter-angular-ui.d.ts",
+    "sideEffects": false
+}
