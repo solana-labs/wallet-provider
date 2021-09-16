@@ -17,20 +17,20 @@
         "build": "yarn clean && ng build angular-ui --configuration=production"
     },
     "peerDependencies": {
-        "@angular/core": "^12.2.0",
-        "@ngrx/component-store": "^12.4.0",
-        "@solana/wallet-adapter-base": "^0.5.2",
-        "@solana/wallet-adapter-wallets": "^0.9.0",
-        "@solana/wallet-adapter-angular": "0.1.0",
-        "@solana/web3.js": "^1.20.0",
-        "rxjs": "~6.6.0",
         "@angular/animations": "~12.2.0",
         "@angular/cdk": "^12.2.5",
         "@angular/common": "~12.2.0",
+        "@angular/core": "^12.2.0",
         "@angular/forms": "~12.2.0",
         "@angular/material": "^12.2.5",
         "@angular/platform-browser": "~12.2.0",
         "@angular/platform-browser-dynamic": "~12.2.0",
+        "@ngrx/component-store": "^12.4.0",
+        "@solana/wallet-adapter-angular": "0.1.0",
+        "@solana/wallet-adapter-base": "^0.5.2",
+        "@solana/wallet-adapter-wallets": "^0.9.0",
+        "@solana/web3.js": "^1.20.0",
+        "rxjs": "~6.6.0",
         "zone.js": "~0.11.4"
     },
     "dependencies": {

@@ -1,5 +1,9 @@
-import { Component, HostBinding, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, ViewEncapsulation } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { MatSelectionListChange } from '@angular/material/list';
 import { WalletStore } from '@solana/wallet-adapter-angular';
+import { BehaviorSubject, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'wallet-adapter-angular-ui-dialog',
@@ -10,15 +14,39 @@ import { WalletStore } from '@solana/wallet-adapter-angular';
                 <mat-icon>close</mat-icon>
             </button>
         </h2>
-        <mat-selection-list [multiple]="false">
-            <mat-list-option *ngFor="let wallet of wallets$ | async" [value]="wallet">
-                <div class="wrapper">
-                    <p>{{ wallet.name }}</p>
+        <ng-container *ngrxLet="more$; let moreWallets">
+            <ng-container *ngrxLet="expanded$; let expanded">
+                <mat-selection-list [multiple]="false" (selectionChange)="onSelectionChange($event)">
+                    <mat-list-option
+                        *ngFor="let wallet of featured$ | async; last as isLast"
+                        [value]="wallet"
+                        [ngClass]="{
+                            'bottom-separator': expanded || !isLast
+                        }"
+                    >
+                        <wallet-adapter-angular-ui-list-item [wallet]="wallet"> </wallet-adapter-angular-ui-list-item>
+                    </mat-list-option>
+                    <ng-container *ngIf="moreWallets.length > 0 && expanded">
+                        <mat-list-option
+                            *ngFor="let wallet of moreWallets; last as isLast"
+                            [value]="wallet"
+                            [ngClass]="{
+                                'bottom-separator': !isLast
+                            }"
+                        >
+                            <wallet-adapter-angular-ui-list-item [wallet]="wallet">
+                            </wallet-adapter-angular-ui-list-item>
+                        </mat-list-option>
+                    </ng-container>
+                </mat-selection-list>
 
-                    <img [src]="wallet.icon | sanitizeUrl" [alt]="wallet.name + ' icon'" />
-                </div>
-            </mat-list-option>
-        </mat-selection-list>
+                <wallet-adapter-angular-ui-expand
+                    *ngIf="moreWallets.length > 0"
+                    (toggleExpand)="onToggleExpand($event)"
+                >
+                </wallet-adapter-angular-ui-expand>
+            </ng-container>
+        </ng-container>
     `,
     encapsulation: ViewEncapsulation.None,
     styles: [
@@ -46,18 +74,12 @@ import { WalletStore } from '@solana/wallet-adapter-angular';
                 padding: 0;
             }
 
-            .mat-list-option {
+            .bottom-separator {
                 border-bottom: solid 1px rgb(255 255 255 / 10%);
             }
 
             .mat-list-option:last-child {
                 border-bottom: none;
-            }
-
-            .mat-list-option .wrapper {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
             }
 
             .mat-list-base {
@@ -71,21 +93,39 @@ import { WalletStore } from '@solana/wallet-adapter-angular';
             .mat-list-item-content {
                 padding: 0;
             }
-
-            .mat-list-option p {
-                margin: 0;
-            }
-
-            .mat-list-option img {
-                width: 1.5rem;
-                height: 1.5rem;
-            }
         `,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletAdapterAngularUiDialogComponent {
     @HostBinding('class') class = 'host';
-    wallets$ = this.walletStore.wallets$;
+    private readonly _expanded = new BehaviorSubject(false);
+    readonly expanded$ = this._expanded.asObservable();
+    private readonly _featuredWallets = new BehaviorSubject(3);
+    @Input() set featuredWallets(value: number) {
+        this._featuredWallets.next(value);
+    }
+    readonly featuredWallets$ = this._featuredWallets.asObservable();
+    readonly wallets$ = this._walletStore.wallets$;
+    readonly featured$ = combineLatest([this._walletStore.wallets$, this.featuredWallets$]).pipe(
+        map(([wallets, featuredWallets]) => wallets.slice(0, featuredWallets))
+    );
+    readonly more$ = combineLatest([this._walletStore.wallets$, this.featuredWallets$]).pipe(
+        map(([wallets, featuredWallets]) => wallets.slice(featuredWallets))
+    );
 
-    constructor(private walletStore: WalletStore) {}
+    constructor(
+        private readonly _walletStore: WalletStore,
+        private readonly _matDialogRef: MatDialogRef<WalletAdapterAngularUiDialogComponent>
+    ) {}
+
+    onToggleExpand(expanded: boolean): void {
+        this._expanded.next(expanded);
+    }
+
+    onSelectionChange({ options }: MatSelectionListChange): void {
+        const [option] = options;
+        this._walletStore.selectWallet(option.value.name || null);
+        this._matDialogRef.close();
+    }
 }

@@ -2920,10 +2920,17 @@
   dependencies:
     tslib "^2.0.0"
 
-"@ngtools/webpack@12.2.6":
-  version "12.2.6"
-  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-12.2.6.tgz#9bb1c1b9b21deceee183e5eae96db7350caefdcd"
-  integrity sha512-LuQXKVH0m85+GT8tldrSBmmgyHycxXkbLaJNtuYGK358dJ9tBdyOPXn7GZzHvpVL5Zdpu/ahuFN2PbFzN+qX/A==
+"@ngrx/component@^12.4.0":
+  version "12.4.0"
+  resolved "https://registry.yarnpkg.com/@ngrx/component/-/component-12.4.0.tgz#3a126de494ef87891eb44f9aa3d526aaad89a540"
+  integrity sha512-GoJpLjPcN2CzfnPekxDzRs96z71GqjHvAvMcQI/CzFro2DpFb1S88ChLDh1Qo9hxKFqeqT8Y/HLhcZkSyKRJIQ==
+  dependencies:
+    tslib "^2.0.0"
+
+"@ngtools/webpack@12.2.5":
+  version "12.2.5"
+  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-12.2.5.tgz#f0077e302434b00bc67924142c88a844f320f7b9"
+  integrity sha512-wc+ovfJucCxAjoP3ExnJll8K3nAoNCiFyDEO8dgHkriY/IWhGdwOu1eduHgfT/mWS40Awj/inJJir9oTi4YBVg==
 
 "@node-rs/helper@1.2.1":
   version "1.2.1"
