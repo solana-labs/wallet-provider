@@ -31,7 +31,6 @@ import {
                     getSolletWallet(),
                     getSolletExtensionWallet(),
                 ],
-                autoConnect: true,
             },
         },
         WalletStore,

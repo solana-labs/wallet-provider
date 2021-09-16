@@ -2,12 +2,12 @@ import { Component, Input } from '@angular/core';
 import { Wallet } from '@solana/wallet-adapter-wallets';
 
 @Component({
-    selector: 'wallet-adapter-angular-ui-list-item',
+    selector: 'wallet-list-item',
     template: `
         <ng-container *ngIf="wallet">
             <p>{{ wallet.name }}</p>
 
-            <img [src]="wallet.icon | sanitizeUrl" [alt]="wallet.name + ' icon'" />
+            <img [src]="wallet.icon | sanitizeUrl" alt="" />
         </ng-container>
     `,
     styles: [
@@ -29,6 +29,6 @@ import { Wallet } from '@solana/wallet-adapter-wallets';
         `,
     ],
 })
-export class WalletAdapterAngularUiListItemComponent {
+export class WalletListItemComponent {
     @Input() wallet: Wallet | null = null;
 }

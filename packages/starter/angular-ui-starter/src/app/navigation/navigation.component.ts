@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { WalletStore } from '@solana/wallet-adapter-angular';
 
 @Component({
@@ -6,7 +6,13 @@ import { WalletStore } from '@solana/wallet-adapter-angular';
     template: `
         <header>
             <h1>Solana Starter App</h1>
-            <button mat-raised-button color="primary" wallet-adapter-angular-ui-dialog-button>Select Wallet</button>
+            <div>
+                <wallet-multi-button></wallet-multi-button>
+                <button *ngIf="wallet$ | ngrxPush" mat-raised-button color="warn" wallet-disconnect-button>
+                    Disconnect
+                    <mat-icon>logout</mat-icon>
+                </button>
+            </div>
         </header>
     `,
     styles: [
@@ -25,5 +31,10 @@ import { WalletStore } from '@solana/wallet-adapter-angular';
             }
         `,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NavigationComponent {}
+export class NavigationComponent {
+    wallet$ = this._walletStore.wallet$;
+
+    constructor(private _walletStore: WalletStore) {}
+}

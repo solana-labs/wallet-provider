@@ -1,12 +1,12 @@
 import { Directive, HostListener, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { WalletAdapterAngularUiDialogComponent } from '../dialog/dialog.component';
+import { WalletDialogComponent } from '../dialog/dialog.component';
 
-@Directive({ selector: 'button[wallet-adapter-angular-ui-dialog-button]' })
-export class WalletAdapterAngularUiDialogButtonDirective {
+@Directive({ selector: 'button[wallet-dialog-button]' })
+export class WalletDialogButtonDirective {
     @HostListener('click') onClick(): void {
-        this._matDialog.open(WalletAdapterAngularUiDialogComponent, {
+        this._matDialog.open(WalletDialogComponent, {
             viewContainerRef: this._viewContainerRef,
         });
     }

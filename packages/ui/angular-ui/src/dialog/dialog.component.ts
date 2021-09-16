@@ -6,7 +6,7 @@ import { BehaviorSubject, combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Component({
-    selector: 'wallet-adapter-angular-ui-dialog',
+    selector: 'wallet-dialog',
     template: `
         <h2 mat-dialog-title class="mat-primary">
             <span>Select Wallet</span>
@@ -24,7 +24,7 @@ import { map } from 'rxjs/operators';
                             'bottom-separator': expanded || !isLast
                         }"
                     >
-                        <wallet-adapter-angular-ui-list-item [wallet]="wallet"> </wallet-adapter-angular-ui-list-item>
+                        <wallet-list-item [wallet]="wallet"> </wallet-list-item>
                     </mat-list-option>
                     <ng-container *ngIf="moreWallets.length > 0 && expanded">
                         <mat-list-option
@@ -34,17 +34,12 @@ import { map } from 'rxjs/operators';
                                 'bottom-separator': !isLast
                             }"
                         >
-                            <wallet-adapter-angular-ui-list-item [wallet]="wallet">
-                            </wallet-adapter-angular-ui-list-item>
+                            <wallet-list-item [wallet]="wallet"> </wallet-list-item>
                         </mat-list-option>
                     </ng-container>
                 </mat-selection-list>
 
-                <wallet-adapter-angular-ui-expand
-                    *ngIf="moreWallets.length > 0"
-                    (toggleExpand)="onToggleExpand($event)"
-                >
-                </wallet-adapter-angular-ui-expand>
+                <wallet-expand *ngIf="moreWallets.length > 0" (toggleExpand)="onToggleExpand($event)"> </wallet-expand>
             </ng-container>
         </ng-container>
     `,
@@ -97,7 +92,7 @@ import { map } from 'rxjs/operators';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class WalletAdapterAngularUiDialogComponent {
+export class WalletDialogComponent {
     @HostBinding('class') class = 'host';
     private readonly _expanded = new BehaviorSubject(false);
     readonly expanded$ = this._expanded.asObservable();
@@ -116,7 +111,7 @@ export class WalletAdapterAngularUiDialogComponent {
 
     constructor(
         private readonly _walletStore: WalletStore,
-        private readonly _matDialogRef: MatDialogRef<WalletAdapterAngularUiDialogComponent>
+        private readonly _matDialogRef: MatDialogRef<WalletDialogComponent>
     ) {}
 
     onToggleExpand(expanded: boolean): void {

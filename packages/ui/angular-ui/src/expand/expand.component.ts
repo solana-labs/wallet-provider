@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
-    selector: 'wallet-adapter-angular-ui-expand',
+    selector: 'wallet-expand',
     template: `
         <button (click)="toggleExpand.emit(!expanded)" class="expand-trigger">
             {{ expanded ? 'Less' : 'More' }} options
@@ -28,7 +28,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
         `,
     ],
 })
-export class WalletAdapterAngularUiExpandComponent {
+export class WalletExpandComponent {
     @Input() expanded: boolean | null = null;
     @Output() toggleExpand = new EventEmitter<boolean>();
 }
