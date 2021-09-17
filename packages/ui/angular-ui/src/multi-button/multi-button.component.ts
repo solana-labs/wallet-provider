@@ -13,7 +13,7 @@ import { isNotNull } from '../utils';
                     Select Wallet
                 </button>
 
-                <wallet-connect-button *ngIf="!connected && wallet"> Connect </wallet-connect-button>
+                <wallet-connect-button *ngIf="!connected && wallet"></wallet-connect-button>
 
                 <ng-container *ngIf="connected">
                     <button mat-raised-button color="primary" [matMenuTriggerFor]="walletMenu">
