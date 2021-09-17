@@ -8,7 +8,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { ReactiveComponentModule } from '@ngrx/component';
 
-import { WalletConnectButtonDirective } from './connect-button/connect-button.directive';
+import { WalletConnectButtonComponent } from './connect-button/connect-button.component';
 import { WalletDialogButtonDirective } from './dialog-button/dialog-button.directive';
 import { WalletDialogComponent } from './dialog/dialog.component';
 import { WalletDisconnectButtonDirective } from './disconnect-button/disconnect-button.directive';
@@ -32,7 +32,7 @@ import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
     ],
     exports: [WalletMultiButtonComponent, WalletDisconnectButtonDirective],
     declarations: [
-        WalletConnectButtonDirective,
+        WalletConnectButtonComponent,
         WalletDisconnectButtonDirective,
         WalletMultiButtonComponent,
         WalletDialogButtonDirective,
