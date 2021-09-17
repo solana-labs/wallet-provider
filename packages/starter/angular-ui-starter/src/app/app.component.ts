@@ -1,40 +1,18 @@
-import { Component } from '@angular/core';
-import { ConnectionStore, WALLET_CONFIG, WalletStore } from '@solana/wallet-adapter-angular';
-import {
-    getBloctoWallet,
-    getLedgerWallet,
-    getPhantomWallet,
-    getSlopeWallet,
-    getSolflareWallet,
-    getSolletExtensionWallet,
-    getSolletWallet,
-    getTorusWallet,
-} from '@solana/wallet-adapter-wallets';
+import { Component, OnInit } from '@angular/core';
+import { ConnectionStore, WalletStore } from '@solana/wallet-adapter-angular';
+
+import { AppStore } from './app.store';
 
 @Component({
     selector: 'app-root',
     template: ` <app-navigation></app-navigation> `,
     styles: [],
-    providers: [
-        {
-            provide: WALLET_CONFIG,
-            useValue: {
-                wallets: [
-                    getPhantomWallet(),
-                    getSolflareWallet(),
-                    getSlopeWallet(),
-                    getTorusWallet({
-                        options: { clientId: 'Get a client ID @ https://developer.tor.us' },
-                    }),
-                    getLedgerWallet(),
-                    getBloctoWallet(),
-                    getSolletWallet(),
-                    getSolletExtensionWallet(),
-                ],
-            },
-        },
-        WalletStore,
-        ConnectionStore,
-    ],
+    viewProviders: [WalletStore, ConnectionStore, AppStore],
 })
-export class AppComponent {}
+export class AppComponent implements OnInit {
+    constructor(private _appStore: AppStore) {}
+
+    ngOnInit(): void {
+        this._appStore.notifyError();
+    }
+}
