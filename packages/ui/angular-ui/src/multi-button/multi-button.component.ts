@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { WalletStore } from '@solana/wallet-adapter-angular';
 import { map } from 'rxjs/operators';
+
 import { isNotNull } from '../utils';
 
 @Component({
@@ -23,11 +24,11 @@ import { isNotNull } from '../utils';
                     <button mat-raised-button color="primary" [matMenuTriggerFor]="walletMenu">
                         <div class="button-wrapper">
                             <wallet-icon [wallet]="wallet"></wallet-icon>
-                            {{ address$ | async | obscureAddress }}
+                            {{ address$ | ngrxPush | obscureAddress }}
                         </div>
                     </button>
                     <mat-menu #walletMenu="matMenu">
-                        <button *ngIf="address$ | async as address" mat-menu-item [cdkCopyToClipboard]="address">
+                        <button *ngIf="address$ | ngrxPush as address" mat-menu-item [cdkCopyToClipboard]="address">
                             <mat-icon>content_copy</mat-icon>
                             Copy address
                         </button>
@@ -58,14 +59,15 @@ import { isNotNull } from '../utils';
             }
         `,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletMultiButtonComponent {
-    wallet$ = this._walletStore.wallet$;
-    connected$ = this._walletStore.connected$;
-    address$ = this._walletStore.publicKey$.pipe(
+    readonly wallet$ = this._walletStore.wallet$;
+    readonly connected$ = this._walletStore.connected$;
+    readonly address$ = this._walletStore.publicKey$.pipe(
         isNotNull,
         map((publicKey) => publicKey.toBase58())
     );
 
-    constructor(private _walletStore: WalletStore) {}
+    constructor(private readonly _walletStore: WalletStore) {}
 }

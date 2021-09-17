@@ -11,5 +11,5 @@ export class WalletDialogButtonDirective {
         });
     }
 
-    constructor(private _matDialog: MatDialog, private _viewContainerRef: ViewContainerRef) {}
+    constructor(private readonly _matDialog: MatDialog, private readonly _viewContainerRef: ViewContainerRef) {}
 }

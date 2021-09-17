@@ -10,7 +10,7 @@ import { AppStore } from './app.store';
     viewProviders: [WalletStore, ConnectionStore, AppStore],
 })
 export class AppComponent implements OnInit {
-    constructor(private _appStore: AppStore) {}
+    constructor(private readonly _appStore: AppStore) {}
 
     ngOnInit(): void {
         this._appStore.notifyError();

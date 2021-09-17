@@ -36,6 +36,7 @@ import { NavigationModule } from './navigation/navigation.module';
                     getSolletWallet(),
                     getSolletExtensionWallet(),
                 ],
+                // autoConnect: true,
             },
         },
     ],

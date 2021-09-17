@@ -7,5 +7,5 @@ export class WalletDisconnectButtonDirective {
         this._walletStore.disconnect().subscribe();
     }
 
-    constructor(private _walletStore: WalletStore) {}
+    constructor(private readonly _walletStore: WalletStore) {}
 }

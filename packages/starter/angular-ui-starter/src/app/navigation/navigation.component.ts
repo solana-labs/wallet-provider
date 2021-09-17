@@ -39,7 +39,7 @@ import { WalletStore } from '@solana/wallet-adapter-angular';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavigationComponent {
-    wallet$ = this._walletStore.wallet$;
+    readonly wallet$ = this._walletStore.wallet$;
 
-    constructor(private _walletStore: WalletStore) {}
+    constructor(private readonly _walletStore: WalletStore) {}
 }

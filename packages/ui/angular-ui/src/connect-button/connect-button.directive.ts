@@ -7,5 +7,5 @@ export class WalletConnectButtonDirective {
         this._walletStore.connect().subscribe();
     }
 
-    constructor(private _walletStore: WalletStore) {}
+    constructor(private readonly _walletStore: WalletStore) {}
 }
