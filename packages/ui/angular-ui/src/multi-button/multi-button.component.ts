@@ -1,23 +1,23 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
 import { WalletStore } from '@solana/wallet-adapter-angular';
 import { map } from 'rxjs/operators';
 
-import { isNotNull } from '../utils';
+import { isNotNull } from '../shared/operators';
 
 @Component({
     selector: 'wallet-multi-button',
     template: `
-        <ng-container *ngrxLet="connected$; let connected">
-            <ng-container *ngrxLet="wallet$; let wallet">
-                <button *ngIf="wallet === null" mat-raised-button color="primary" wallet-dialog-button>
-                    Select Wallet
-                </button>
-
+        <ng-container *ngrxLet="wallet$; let wallet">
+            <ng-container *ngrxLet="connected$; let connected">
+                <wallet-dialog-button
+                    *ngIf="wallet === null"
+                    [viewContainerRef]="viewContainerRef"
+                ></wallet-dialog-button>
                 <wallet-connect-button *ngIf="!connected && wallet"></wallet-connect-button>
 
                 <ng-container *ngIf="connected">
                     <button mat-raised-button color="primary" [matMenuTriggerFor]="walletMenu">
-                        <div class="button-wrapper">
+                        <div class="button-content">
                             <wallet-icon [wallet]="wallet"></wallet-icon>
                             {{ address$ | ngrxPush | obscureAddress }}
                         </div>
@@ -27,7 +27,7 @@ import { isNotNull } from '../utils';
                             <mat-icon>content_copy</mat-icon>
                             Copy address
                         </button>
-                        <button mat-menu-item wallet-dialog-button>
+                        <button mat-menu-item [wallet-dialog-button]="viewContainerRef">
                             <mat-icon>sync_alt</mat-icon>
                             Connect a different wallet
                         </button>
@@ -43,14 +43,10 @@ import { isNotNull } from '../utils';
     `,
     styles: [
         `
-            .button-wrapper {
+            .button-content {
                 display: flex;
                 gap: 0.5rem;
                 align-items: center;
-            }
-
-            .button-wrapper .icon {
-                margin: 0;
             }
         `,
     ],
@@ -64,5 +60,5 @@ export class WalletMultiButtonComponent {
         map((publicKey) => publicKey.toBase58())
     );
 
-    constructor(private readonly _walletStore: WalletStore) {}
+    constructor(public viewContainerRef: ViewContainerRef, private readonly _walletStore: WalletStore) {}
 }

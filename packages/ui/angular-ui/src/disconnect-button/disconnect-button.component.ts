@@ -7,19 +7,16 @@ import { map } from 'rxjs/operators';
     selector: 'wallet-disconnect-button',
     template: `
         <button mat-raised-button color="warn" wallet-disconnect-button [disabled]="disconnecting$ | ngrxPush">
-            <div class="button-wrapper">
-                <ng-content></ng-content>
-
-                <ng-container *ngIf="!children">
-                    <mat-icon>logout</mat-icon>
-                    {{ innerText$ | ngrxPush }}
-                </ng-container>
+            <ng-content></ng-content>
+            <div class="button-content" *ngIf="!children">
+                <mat-icon>logout</mat-icon>
+                {{ innerText$ | ngrxPush }}
             </div>
         </button>
     `,
     styles: [
         `
-            .button-wrapper {
+            .button-content {
                 display: flex;
                 gap: 0.5rem;
                 align-items: center;

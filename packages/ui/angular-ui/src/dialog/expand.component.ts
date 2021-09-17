@@ -24,6 +24,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
                 color: var(--text-primary-color);
                 border: none;
                 border-top: solid 1px rgb(255 255 255 / 10%);
+                cursor: pointer;
             }
         `,
     ],

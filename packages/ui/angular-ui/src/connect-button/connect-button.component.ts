@@ -13,13 +13,10 @@ import { map } from 'rxjs/operators';
             wallet-connect-button
             [disabled]="connecting$ | ngrxPush"
         >
-            <div class="button-wrapper">
-                <ng-content></ng-content>
-
-                <ng-container *ngIf="!children">
-                    <wallet-icon *ngIf="wallet" [wallet]="wallet"></wallet-icon>
-                    {{ innerText$ | ngrxPush }}
-                </ng-container>
+            <ng-content></ng-content>
+            <div class="button-content" *ngIf="!children">
+                <wallet-icon *ngIf="wallet" [wallet]="wallet"></wallet-icon>
+                {{ innerText$ | ngrxPush }}
             </div>
         </button>
     `,
@@ -29,7 +26,7 @@ import { map } from 'rxjs/operators';
                 display: inline-block;
             }
 
-            .button-wrapper {
+            .button-content {
                 display: flex;
                 gap: 0.5rem;
                 align-items: center;

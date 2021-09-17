@@ -8,18 +8,18 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { ReactiveComponentModule } from '@ngrx/component';
 
-import { WalletConnectButtonComponent } from './connect-button/connect-button.component';
-import { WalletConnectButtonDirective } from './connect-button/connect-button.directive';
-import { WalletDialogButtonDirective } from './dialog-button/dialog-button.directive';
-import { WalletDialogComponent } from './dialog/dialog.component';
-import { WalletDisconnectButtonComponent } from './disconnect-button/disconnect-button.component';
-import { WalletDisconnectButtonDirective } from './disconnect-button/disconnect-button.directive';
-import { WalletExpandComponent } from './expand/expand.component';
-import { WalletIconComponent } from './icon/icon.component';
-import { WalletListItemComponent } from './list-item/list-item.component';
-import { WalletMultiButtonComponent } from './multi-button/multi-button.component';
-import { ObscureAddressPipe } from './pipes/obscure-address.pipe';
-import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
+import { WalletConnectButtonComponent, WalletConnectButtonDirective } from './connect-button';
+import {
+    WalletDialogButtonComponent,
+    WalletDialogButtonDirective,
+    WalletDialogComponent,
+    WalletExpandComponent,
+    WalletListItemComponent,
+} from './dialog';
+
+import { WalletDisconnectButtonComponent, WalletDisconnectButtonDirective } from './disconnect-button';
+import { WalletMultiButtonComponent } from './multi-button';
+import { ObscureAddressPipe, SanitizeUrlPipe, WalletIconComponent } from './shared';
 
 @NgModule({
     imports: [
@@ -39,6 +39,7 @@ import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
         WalletDisconnectButtonComponent,
         WalletDisconnectButtonDirective,
         WalletMultiButtonComponent,
+        WalletDialogButtonComponent,
         WalletDialogButtonDirective,
         WalletDialogComponent,
         WalletListItemComponent,
