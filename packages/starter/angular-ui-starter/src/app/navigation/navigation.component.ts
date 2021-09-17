@@ -6,7 +6,7 @@ import { WalletStore } from '@solana/wallet-adapter-angular';
     template: `
         <header>
             <h1>Solana Starter App</h1>
-            <div>
+            <div class="actions">
                 <wallet-multi-button></wallet-multi-button>
                 <button *ngIf="wallet$ | ngrxPush" mat-raised-button color="warn" wallet-disconnect-button>
                     Disconnect
@@ -28,6 +28,11 @@ import { WalletStore } from '@solana/wallet-adapter-angular';
 
             header h1 {
                 margin: 0;
+            }
+
+            .actions {
+                display: flex;
+                gap: 1rem;
             }
         `,
     ],

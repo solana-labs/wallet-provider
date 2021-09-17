@@ -11,6 +11,7 @@ import { WalletDialogButtonDirective } from './dialog-button/dialog-button.direc
 import { WalletDialogComponent } from './dialog/dialog.component';
 import { WalletDisconnectButtonDirective } from './disconnect-button/disconnect-button.directive';
 import { WalletExpandComponent } from './expand/expand.component';
+import { WalletIconComponent } from './icon/icon.component';
 import { WalletListItemComponent } from './list-item/list-item.component';
 import { WalletMultiButtonComponent } from './multi-button/multi-button.component';
 import { ObscureAddressPipe } from './pipes/obscure-address.pipe';
@@ -27,6 +28,7 @@ import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
         WalletDialogComponent,
         WalletListItemComponent,
         WalletExpandComponent,
+        WalletIconComponent,
         SanitizeUrlPipe,
         ObscureAddressPipe,
     ],

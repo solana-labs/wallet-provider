@@ -12,21 +12,28 @@ import { map } from 'rxjs/operators';
                 </button>
 
                 <button *ngIf="wallet && !connected" mat-raised-button color="primary" wallet-connect-button>
-                    <img [src]="wallet.icon | sanitizeUrl" alt="" />
-                    Connect
+                    <div class="button-wrapper">
+                        <wallet-icon [wallet]="wallet"></wallet-icon>
+                        Connect
+                    </div>
                 </button>
 
                 <button *ngIf="connected" mat-raised-button color="primary">
-                    {{ address$ | async | obscureAddress }}
+                    <div class="button-wrapper">
+                        <wallet-icon [wallet]="wallet"></wallet-icon>
+                        {{ address$ | async | obscureAddress }}
+                    </div>
                 </button>
             </ng-container>
         </ng-container>
     `,
     styles: [
         `
-            button img {
-                width: 1.5rem;
-                height: 1.5rem;
+            .button-wrapper {
+                display: flex;
+                justify-content: center;
+                gap: 0.5rem;
+                align-items: center;
             }
         `,
     ],

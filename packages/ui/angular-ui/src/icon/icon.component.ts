@@ -2,28 +2,26 @@ import { Component, Input } from '@angular/core';
 import { Wallet } from '@solana/wallet-adapter-wallets';
 
 @Component({
-    selector: 'wallet-list-item',
+    selector: 'wallet-icon',
     template: `
         <ng-container *ngIf="wallet">
-            <p>{{ wallet.name }}</p>
-
-            <wallet-icon [wallet]="wallet"></wallet-icon>
+            <img [src]="wallet.icon | sanitizeUrl" alt="" />
         </ng-container>
     `,
     styles: [
         `
             :host {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
+                width: 1.5rem;
+                height: 1.5rem;
             }
 
-            p {
-                margin: 0;
+            img {
+                width: inherit;
+                height: inherit;
             }
         `,
     ],
 })
-export class WalletListItemComponent {
+export class WalletIconComponent {
     @Input() wallet: Wallet | null = null;
 }
