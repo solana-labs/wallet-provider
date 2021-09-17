@@ -1,11 +1,7 @@
-import { Injectable, ViewContainerRef } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ComponentStore, tapResponse } from '@ngrx/component-store';
+import { Injectable } from '@angular/core';
+import { ComponentStore } from '@ngrx/component-store';
 import { WalletStore } from '@solana/wallet-adapter-angular';
-import { Observable } from 'rxjs';
-import { exhaustMap, map } from 'rxjs/operators';
-
-import { WalletDialogComponent } from '../dialog';
+import { map } from 'rxjs/operators';
 
 interface ViewModel {
     isOpen: boolean;
@@ -21,30 +17,7 @@ export class WalletMultiButtonStore extends ComponentStore<ViewModel> {
         { debounce: true }
     );
 
-    constructor(
-        private _walletStore: WalletStore,
-        private _matDialog: MatDialog,
-        private _viewContainerRef: ViewContainerRef
-    ) {
+    constructor(private _walletStore: WalletStore) {
         super({ isOpen: false });
     }
-
-    openDialog = this.effect((action$: Observable<void>) =>
-        action$.pipe(
-            exhaustMap(() => {
-                const dialogRef = this._matDialog.open(WalletDialogComponent, {
-                    viewContainerRef: this._viewContainerRef,
-                });
-
-                this.patchState({ isOpen: true });
-
-                return dialogRef.afterClosed().pipe(
-                    tapResponse(
-                        () => this.patchState({ isOpen: false }),
-                        (error) => console.error(error)
-                    )
-                );
-            })
-        )
-    );
 }

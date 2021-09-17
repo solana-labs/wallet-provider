@@ -1,37 +1,37 @@
-import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
-
-import { WalletMultiButtonStore } from './multi-button.store';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { WalletStore } from '@solana/wallet-adapter-angular';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'wallet-multi-button',
     template: `
-        <ng-container *ngrxLet="vm$; let vm">
-            <wallet-dialog-button *ngIf="vm.wallet === null" (click)="onOpenDialog()"></wallet-dialog-button>
-            <wallet-connect-button *ngIf="!vm.connected && vm.wallet"></wallet-connect-button>
+        <wallet-dialog-button *ngIf="(wallet$ | ngrxPush) === null"></wallet-dialog-button>
+        <wallet-connect-button
+            *ngIf="(connected$ | ngrxPush) === false && (wallet$ | ngrxPush)"
+        ></wallet-connect-button>
 
-            <ng-container *ngIf="vm.connected">
-                <button mat-raised-button color="primary" [matMenuTriggerFor]="walletMenu">
-                    <div class="button-content">
-                        <wallet-icon [wallet]="vm.wallet"></wallet-icon>
-                        {{ vm.address | obscureAddress }}
-                    </div>
+        <ng-container *ngIf="connected$ | ngrxPush">
+            <button mat-raised-button color="primary" [matMenuTriggerFor]="walletMenu">
+                <div class="button-content">
+                    <wallet-icon [wallet]="wallet$ | ngrxPush"></wallet-icon>
+                    {{ address$ | ngrxPush | obscureAddress }}
+                </div>
+            </button>
+            <mat-menu #walletMenu="matMenu">
+                <button *ngIf="address$ | ngrxPush as address" mat-menu-item [cdkCopyToClipboard]="address">
+                    <mat-icon>content_copy</mat-icon>
+                    Copy address
                 </button>
-                <mat-menu #walletMenu="matMenu">
-                    <button mat-menu-item [cdkCopyToClipboard]="vm.address!">
-                        <mat-icon>content_copy</mat-icon>
-                        Copy address
-                    </button>
-                    <button mat-menu-item (click)="onOpenDialog()">
-                        <mat-icon>sync_alt</mat-icon>
-                        Connect a different wallet
-                    </button>
-                    <mat-divider></mat-divider>
-                    <button mat-menu-item wallet-disconnect-button>
-                        <mat-icon>logout</mat-icon>
-                        Disconnect
-                    </button>
-                </mat-menu>
-            </ng-container>
+                <button mat-menu-item wallet-dialog-button>
+                    <mat-icon>sync_alt</mat-icon>
+                    Connect a different wallet
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item wallet-disconnect-button>
+                    <mat-icon>logout</mat-icon>
+                    Disconnect
+                </button>
+            </mat-menu>
         </ng-container>
     `,
     styles: [
@@ -44,17 +44,11 @@ import { WalletMultiButtonStore } from './multi-button.store';
         `,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [WalletMultiButtonStore],
 })
 export class WalletMultiButtonComponent {
-    readonly vm$ = this._multiButtonStore.vm$;
+    readonly wallet$ = this._walletStore.wallet$;
+    readonly connected$ = this._walletStore.connected$;
+    readonly address$ = this._walletStore.publicKey$.pipe(map((publicKey) => publicKey && publicKey.toBase58()));
 
-    constructor(
-        public readonly viewContainerRef: ViewContainerRef,
-        private readonly _multiButtonStore: WalletMultiButtonStore
-    ) {}
-
-    onOpenDialog(): void {
-        this._multiButtonStore.openDialog();
-    }
+    constructor(private readonly _walletStore: WalletStore) {}
 }

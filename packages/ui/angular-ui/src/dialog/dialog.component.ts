@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding, Input, NgZone, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatSelectionListChange } from '@angular/material/list';
 import { WalletStore } from '@solana/wallet-adapter-angular';
@@ -108,8 +108,7 @@ export class WalletDialogComponent {
 
     constructor(
         private readonly _walletStore: WalletStore,
-        private readonly _matDialogRef: MatDialogRef<WalletDialogComponent>,
-        private readonly _ngZone: NgZone
+        private readonly _matDialogRef: MatDialogRef<WalletDialogComponent>
     ) {}
 
     onToggleExpand(expanded: boolean): void {
@@ -119,13 +118,7 @@ export class WalletDialogComponent {
     onSelectionChange({ options }: MatSelectionListChange): void {
         const [option] = options;
 
-        // There's some weirdness regarding zone-compatibility
-        this._ngZone.runOutsideAngular(() => {
-            this._walletStore.selectWallet(option.value || null);
-
-            this._ngZone.run(() => {
-                this._matDialogRef.close();
-            });
-        });
+        this._walletStore.selectWallet(option.value || null);
+        this._matDialogRef.close();
     }
 }
