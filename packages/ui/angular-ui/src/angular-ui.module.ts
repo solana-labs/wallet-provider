@@ -9,8 +9,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { ReactiveComponentModule } from '@ngrx/component';
 
 import { WalletConnectButtonComponent } from './connect-button/connect-button.component';
+import { WalletConnectButtonDirective } from './connect-button/connect-button.directive';
 import { WalletDialogButtonDirective } from './dialog-button/dialog-button.directive';
 import { WalletDialogComponent } from './dialog/dialog.component';
+import { WalletDisconnectButtonComponent } from './disconnect-button/disconnect-button.component';
 import { WalletDisconnectButtonDirective } from './disconnect-button/disconnect-button.directive';
 import { WalletExpandComponent } from './expand/expand.component';
 import { WalletIconComponent } from './icon/icon.component';
@@ -30,9 +32,11 @@ import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
         MatMenuModule,
         ReactiveComponentModule,
     ],
-    exports: [WalletMultiButtonComponent, WalletDisconnectButtonDirective],
+    exports: [WalletMultiButtonComponent, WalletConnectButtonComponent, WalletDisconnectButtonComponent],
     declarations: [
         WalletConnectButtonComponent,
+        WalletConnectButtonDirective,
+        WalletDisconnectButtonComponent,
         WalletDisconnectButtonDirective,
         WalletMultiButtonComponent,
         WalletDialogButtonDirective,

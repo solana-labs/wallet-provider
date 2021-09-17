@@ -8,10 +8,7 @@ import { WalletStore } from '@solana/wallet-adapter-angular';
             <h1>Solana Starter App</h1>
             <div class="actions">
                 <wallet-multi-button></wallet-multi-button>
-                <button *ngIf="wallet$ | ngrxPush" mat-raised-button color="warn" wallet-disconnect-button>
-                    <mat-icon>logout</mat-icon>
-                    Disconnect
-                </button>
+                <wallet-disconnect-button *ngIf="wallet$ | ngrxPush"> Disconnect </wallet-disconnect-button>
             </div>
         </header>
     `,
