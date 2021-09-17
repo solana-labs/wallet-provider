@@ -97,9 +97,6 @@ export class WalletDialogComponent {
     private readonly _expanded = new BehaviorSubject(false);
     readonly expanded$ = this._expanded.asObservable();
     private readonly _featuredWallets = new BehaviorSubject(3);
-    @Input() set featuredWallets(value: number) {
-        this._featuredWallets.next(value);
-    }
     readonly featuredWallets$ = this._featuredWallets.asObservable();
     readonly wallets$ = this._walletStore.wallets$;
     readonly featured$ = combineLatest([this._walletStore.wallets$, this.featuredWallets$]).pipe(
@@ -122,6 +119,7 @@ export class WalletDialogComponent {
     onSelectionChange({ options }: MatSelectionListChange): void {
         const [option] = options;
 
+        // There's some weirdness regarding zone-compatibility
         this._ngZone.runOutsideAngular(() => {
             this._walletStore.selectWallet(option.value || null);
 

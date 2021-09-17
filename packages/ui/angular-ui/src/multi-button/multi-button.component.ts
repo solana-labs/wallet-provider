@@ -1,43 +1,36 @@
 import { ChangeDetectionStrategy, Component, ViewContainerRef } from '@angular/core';
-import { WalletStore } from '@solana/wallet-adapter-angular';
-import { map } from 'rxjs/operators';
 
-import { isNotNull } from '../shared/operators';
+import { WalletMultiButtonStore } from './multi-button.store';
 
 @Component({
     selector: 'wallet-multi-button',
     template: `
-        <ng-container *ngrxLet="wallet$; let wallet">
-            <ng-container *ngrxLet="connected$; let connected">
-                <wallet-dialog-button
-                    *ngIf="wallet === null"
-                    [viewContainerRef]="viewContainerRef"
-                ></wallet-dialog-button>
-                <wallet-connect-button *ngIf="!connected && wallet"></wallet-connect-button>
+        <ng-container *ngrxLet="vm$; let vm">
+            <wallet-dialog-button *ngIf="vm.wallet === null" (click)="onOpenDialog()"></wallet-dialog-button>
+            <wallet-connect-button *ngIf="!vm.connected && vm.wallet"></wallet-connect-button>
 
-                <ng-container *ngIf="connected">
-                    <button mat-raised-button color="primary" [matMenuTriggerFor]="walletMenu">
-                        <div class="button-content">
-                            <wallet-icon [wallet]="wallet"></wallet-icon>
-                            {{ address$ | ngrxPush | obscureAddress }}
-                        </div>
+            <ng-container *ngIf="vm.connected">
+                <button mat-raised-button color="primary" [matMenuTriggerFor]="walletMenu">
+                    <div class="button-content">
+                        <wallet-icon [wallet]="vm.wallet"></wallet-icon>
+                        {{ vm.address | obscureAddress }}
+                    </div>
+                </button>
+                <mat-menu #walletMenu="matMenu">
+                    <button mat-menu-item [cdkCopyToClipboard]="vm.address!">
+                        <mat-icon>content_copy</mat-icon>
+                        Copy address
                     </button>
-                    <mat-menu #walletMenu="matMenu">
-                        <button *ngIf="address$ | ngrxPush as address" mat-menu-item [cdkCopyToClipboard]="address">
-                            <mat-icon>content_copy</mat-icon>
-                            Copy address
-                        </button>
-                        <button mat-menu-item [wallet-dialog-button]="viewContainerRef">
-                            <mat-icon>sync_alt</mat-icon>
-                            Connect a different wallet
-                        </button>
-                        <mat-divider></mat-divider>
-                        <button mat-menu-item wallet-disconnect-button>
-                            <mat-icon>logout</mat-icon>
-                            Disconnect
-                        </button>
-                    </mat-menu>
-                </ng-container>
+                    <button mat-menu-item (click)="onOpenDialog()">
+                        <mat-icon>sync_alt</mat-icon>
+                        Connect a different wallet
+                    </button>
+                    <mat-divider></mat-divider>
+                    <button mat-menu-item wallet-disconnect-button>
+                        <mat-icon>logout</mat-icon>
+                        Disconnect
+                    </button>
+                </mat-menu>
             </ng-container>
         </ng-container>
     `,
@@ -51,14 +44,17 @@ import { isNotNull } from '../shared/operators';
         `,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [WalletMultiButtonStore],
 })
 export class WalletMultiButtonComponent {
-    readonly wallet$ = this._walletStore.wallet$;
-    readonly connected$ = this._walletStore.connected$;
-    readonly address$ = this._walletStore.publicKey$.pipe(
-        isNotNull,
-        map((publicKey) => publicKey.toBase58())
-    );
+    readonly vm$ = this._multiButtonStore.vm$;
 
-    constructor(public viewContainerRef: ViewContainerRef, private readonly _walletStore: WalletStore) {}
+    constructor(
+        public readonly viewContainerRef: ViewContainerRef,
+        private readonly _multiButtonStore: WalletMultiButtonStore
+    ) {}
+
+    onOpenDialog(): void {
+        this._multiButtonStore.openDialog();
+    }
 }

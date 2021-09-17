@@ -5,7 +5,8 @@
         "entryFile": "src/index.ts",
         "umdModuleIds": {
             "@solana/wallet-adapter-angular": "@solana/wallet-adapter-angular",
-            "@ngrx/component": "@ngrx/component"
+            "@ngrx/component": "@ngrx/component",
+            "@ngrx/component-store": "@ngrx/component-store"
         }
     }
 }

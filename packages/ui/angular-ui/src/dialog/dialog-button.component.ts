@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, Input, Vi
 @Component({
     selector: 'wallet-dialog-button',
     template: `
-        <button mat-raised-button color="primary" [wallet-dialog-button]="viewContainerRef">
+        <button mat-raised-button color="primary">
             <ng-content></ng-content>
             <ng-container *ngIf="!children">Select Wallet</ng-container>
         </button>
@@ -25,5 +25,4 @@ import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, Input, Vi
 })
 export class WalletDialogButtonComponent {
     @ContentChild('children') children: ElementRef | null = null;
-    @Input() viewContainerRef?: ViewContainerRef;
 }

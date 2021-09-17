@@ -11,12 +11,10 @@ import { ReactiveComponentModule } from '@ngrx/component';
 import { WalletConnectButtonComponent, WalletConnectButtonDirective } from './connect-button';
 import {
     WalletDialogButtonComponent,
-    WalletDialogButtonDirective,
     WalletDialogComponent,
     WalletExpandComponent,
     WalletListItemComponent,
 } from './dialog';
-
 import { WalletDisconnectButtonComponent, WalletDisconnectButtonDirective } from './disconnect-button';
 import { WalletMultiButtonComponent } from './multi-button';
 import { ObscureAddressPipe, SanitizeUrlPipe, WalletIconComponent } from './shared';
@@ -40,7 +38,6 @@ import { ObscureAddressPipe, SanitizeUrlPipe, WalletIconComponent } from './shar
         WalletDisconnectButtonDirective,
         WalletMultiButtonComponent,
         WalletDialogButtonComponent,
-        WalletDialogButtonDirective,
         WalletDialogComponent,
         WalletListItemComponent,
         WalletExpandComponent,
