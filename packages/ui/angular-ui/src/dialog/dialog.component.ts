@@ -18,8 +18,8 @@ import { map } from 'rxjs/operators';
             <ng-container *ngrxLet="expanded$; let expanded">
                 <mat-selection-list [multiple]="false" (selectionChange)="onSelectionChange($event)">
                     <mat-list-option
-                        *ngFor="let wallet of featured$ | async; last as isLast"
-                        [value]="wallet"
+                        *ngFor="let wallet of featured$ | ngrxPush; last as isLast"
+                        [value]="wallet.name"
                         [ngClass]="{
                             'bottom-separator': expanded || !isLast
                         }"
@@ -29,7 +29,7 @@ import { map } from 'rxjs/operators';
                     <ng-container *ngIf="moreWallets.length > 0 && expanded">
                         <mat-list-option
                             *ngFor="let wallet of moreWallets; last as isLast"
-                            [value]="wallet"
+                            [value]="wallet.name"
                             [ngClass]="{
                                 'bottom-separator': !isLast
                             }"
