@@ -30,7 +30,7 @@ import { SanitizeUrlPipe } from './pipes/sanitize-url.pipe';
         MatMenuModule,
         ReactiveComponentModule,
     ],
-    exports: [WalletDialogButtonDirective, WalletMultiButtonComponent, WalletDisconnectButtonDirective],
+    exports: [WalletMultiButtonComponent, WalletDisconnectButtonDirective],
     declarations: [
         WalletConnectButtonDirective,
         WalletDisconnectButtonDirective,
