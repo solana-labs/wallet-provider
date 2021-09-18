@@ -31,7 +31,17 @@ import { ObscureAddressPipe, SanitizeUrlPipe, WalletIconComponent } from './shar
         MatMenuModule,
         ReactiveComponentModule,
     ],
-    exports: [WalletMultiButtonComponent, WalletConnectButtonComponent, WalletDisconnectButtonComponent],
+    exports: [
+        WalletConnectButtonComponent,
+        WalletConnectButtonDirective,
+        WalletDisconnectButtonComponent,
+        WalletDisconnectButtonDirective,
+        WalletMultiButtonComponent,
+        WalletDialogButtonComponent,
+        WalletDialogButtonDirective,
+        WalletDialogComponent,
+        WalletIconComponent,
+    ],
     declarations: [
         WalletConnectButtonComponent,
         WalletConnectButtonDirective,
@@ -48,4 +58,4 @@ import { ObscureAddressPipe, SanitizeUrlPipe, WalletIconComponent } from './shar
         ObscureAddressPipe,
     ],
 })
-export class WalletModule {}
+export class WalletUiModule {}

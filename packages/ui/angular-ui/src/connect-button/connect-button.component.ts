@@ -1,7 +1,9 @@
-import { ChangeDetectionStrategy, Component, ContentChild, ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, Input } from '@angular/core';
 import { WalletStore } from '@solana/wallet-adapter-angular';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+
+import { ButtonColor } from '../shared/types';
 
 @Component({
     selector: 'wallet-connect-button',
@@ -9,9 +11,9 @@ import { map } from 'rxjs/operators';
         <button
             *ngrxLet="wallet$; let wallet"
             mat-raised-button
-            color="primary"
             wallet-connect-button
-            [disabled]="connecting$ | ngrxPush"
+            [color]="color"
+            [disabled]="disabled || (connecting$ | ngrxPush) || !wallet || (connected$ | ngrxPush)"
         >
             <ng-content></ng-content>
             <div class="button-content" *ngIf="!children">
@@ -37,11 +39,12 @@ import { map } from 'rxjs/operators';
 })
 export class WalletConnectButtonComponent {
     @ContentChild('children') children: ElementRef | null = null;
-    readonly innerText$ = combineLatest([
-        this._walletStore.connecting$,
-        this._walletStore.connected$,
-        this._walletStore.wallet$,
-    ]).pipe(
+    @Input() color: ButtonColor = 'primary';
+    @Input() disabled = false;
+    readonly wallet$ = this._walletStore.wallet$;
+    readonly connecting$ = this._walletStore.connecting$;
+    readonly connected$ = this._walletStore.connected$;
+    readonly innerText$ = combineLatest([this.connecting$, this.connected$, this.wallet$]).pipe(
         map(([connecting, connected, wallet]) => {
             if (connecting) return 'Connecting...';
             if (connected) return 'Connected';
@@ -49,8 +52,6 @@ export class WalletConnectButtonComponent {
             return 'Connect Wallet';
         })
     );
-    readonly wallet$ = this._walletStore.wallet$;
-    readonly connecting$ = this._walletStore.connecting$;
 
     constructor(private readonly _walletStore: WalletStore) {}
 }

@@ -1,12 +1,19 @@
-import { Component, ContentChild, ElementRef } from '@angular/core';
+import { Component, ContentChild, ElementRef, Input } from '@angular/core';
 import { WalletStore } from '@solana/wallet-adapter-angular';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { ButtonColor } from '../shared/types';
+
 @Component({
     selector: 'wallet-disconnect-button',
     template: `
-        <button mat-raised-button color="warn" wallet-disconnect-button [disabled]="disconnecting$ | ngrxPush">
+        <button
+            mat-raised-button
+            wallet-disconnect-button
+            [color]="color"
+            [disabled]="disabled || (disconnecting$ | ngrxPush) || (wallet$ | ngrxPush) === null"
+        >
             <ng-content></ng-content>
             <div class="button-content" *ngIf="!children">
                 <mat-icon>logout</mat-icon>
@@ -26,6 +33,8 @@ import { map } from 'rxjs/operators';
 })
 export class WalletDisconnectButtonComponent {
     @ContentChild('children') children: ElementRef | null = null;
+    @Input() color: ButtonColor = 'primary';
+    @Input() disabled = false;
     readonly innerText$ = combineLatest([this._walletStore.disconnecting$, this._walletStore.wallet$]).pipe(
         map(([disconnecting, wallet]) => {
             if (disconnecting) return 'Disconnecting ...';

@@ -1,4 +1,6 @@
-export * from './angular-ui.module';
-export * from './multi-button/multi-button.component';
-export * from './connect-button/connect-button.component';
-export * from './disconnect-button/disconnect-button.component';
+export { WalletUiModule } from './angular-ui.module';
+export { WalletMultiButtonComponent } from './multi-button';
+export { WalletConnectButtonComponent, WalletConnectButtonDirective } from './connect-button';
+export { WalletDisconnectButtonComponent, WalletDisconnectButtonDirective } from './disconnect-button';
+export { WalletDialogButtonComponent, WalletDialogButtonDirective, WalletDialogComponent } from './dialog';
+export { WalletIconComponent } from './shared';

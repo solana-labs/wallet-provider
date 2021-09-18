@@ -1,18 +1,22 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, Input } from '@angular/core';
 import { WalletStore } from '@solana/wallet-adapter-angular';
 import { map } from 'rxjs/operators';
+
+import { ButtonColor } from '../shared/types';
 
 @Component({
     selector: 'wallet-multi-button',
     template: `
-        <wallet-dialog-button *ngIf="(wallet$ | ngrxPush) === null"></wallet-dialog-button>
+        <wallet-dialog-button *ngIf="(wallet$ | ngrxPush) === null" [color]="color"></wallet-dialog-button>
         <wallet-connect-button
             *ngIf="(connected$ | ngrxPush) === false && (wallet$ | ngrxPush)"
+            [color]="color"
         ></wallet-connect-button>
 
         <ng-container *ngIf="connected$ | ngrxPush">
-            <button mat-raised-button color="primary" [matMenuTriggerFor]="walletMenu">
-                <div class="button-content">
+            <button mat-raised-button [color]="color" [matMenuTriggerFor]="walletMenu">
+                <ng-content></ng-content>
+                <div class="button-content" *ngIf="!children">
                     <wallet-icon [wallet]="wallet$ | ngrxPush"></wallet-icon>
                     {{ address$ | ngrxPush | obscureAddress }}
                 </div>
@@ -46,6 +50,8 @@ import { map } from 'rxjs/operators';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletMultiButtonComponent {
+    @ContentChild('children') children: ElementRef | null = null;
+    @Input() color: ButtonColor = 'primary';
     readonly wallet$ = this._walletStore.wallet$;
     readonly connected$ = this._walletStore.connected$;
     readonly address$ = this._walletStore.publicKey$.pipe(map((publicKey) => publicKey && publicKey.toBase58()));

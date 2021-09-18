@@ -1,9 +1,11 @@
-import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, Input, ViewContainerRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, Input } from '@angular/core';
+
+import { ButtonColor } from '../shared/types';
 
 @Component({
     selector: 'wallet-dialog-button',
     template: `
-        <button mat-raised-button color="primary" wallet-dialog-button>
+        <button mat-raised-button [color]="color" wallet-dialog-button>
             <ng-content></ng-content>
             <ng-container *ngIf="!children">Select Wallet</ng-container>
         </button>
@@ -25,4 +27,5 @@ import { ChangeDetectionStrategy, Component, ContentChild, ElementRef, Input, Vi
 })
 export class WalletDialogButtonComponent {
     @ContentChild('children') children: ElementRef | null = null;
+    @Input() color: ButtonColor = 'primary';
 }
