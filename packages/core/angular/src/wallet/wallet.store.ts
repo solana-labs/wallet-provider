@@ -14,7 +14,7 @@ import { catchError, concatMap, filter, finalize, first, map, switchMap, tap, wi
 import { fromAdapterEvent, isNotNull } from '../operators';
 import { LocalStorageService } from './local-storage';
 import { WalletNotSelectedError } from './wallet.errors';
-import { signMessage, signTransaction, signAllTransactions } from './wallet.signer';
+import { signAllTransactions, signMessage, signTransaction } from './wallet.signer';
 import { WALLET_CONFIG } from './wallet.tokens';
 import { WalletConfig, WalletState } from './wallet.types';
 
@@ -38,7 +38,7 @@ const initialState: {
 @Injectable()
 export class WalletStore extends ComponentStore<WalletState> {
     private readonly _error = new Subject();
-    private readonly _localStorage = new LocalStorageService<WalletName | null>(
+    private readonly _name = new LocalStorageService<WalletName | null>(
         this._config?.localStorageKey || 'walletName',
         null
     );
@@ -51,7 +51,7 @@ export class WalletStore extends ComponentStore<WalletState> {
     readonly connecting$ = this.select((state) => state.connecting);
     readonly disconnecting$ = this.select((state) => state.disconnecting);
     readonly connected$ = this.select((state) => state.connected);
-    readonly name$ = this.select((state) => state.name);
+    readonly name$ = this._name.value$;
     readonly error$ = this._error.asObservable();
     readonly anchorWallet$ = this.select(
         this.publicKey$,
@@ -100,7 +100,6 @@ export class WalletStore extends ComponentStore<WalletState> {
         this.setState({
             ...initialState,
             wallets: this._config?.wallets || [],
-            name: this._localStorage.value,
             connecting: false,
             disconnecting: false,
             autoConnect: this._config?.autoConnect || false,
@@ -117,7 +116,6 @@ export class WalletStore extends ComponentStore<WalletState> {
                 if (adapter) {
                     const { ready, publicKey, connected } = adapter;
                     this.patchState({
-                        name,
                         adapter,
                         wallet,
                         ready,
@@ -148,7 +146,7 @@ export class WalletStore extends ComponentStore<WalletState> {
                 return from(defer(() => adapter.connect())).pipe(
                     catchError(() => {
                         // Clear the selected wallet
-                        this.patchState({ name: null });
+                        this._name.setItem(null);
                         // Don't throw error, but onError will still be called
                         return of(null);
                     }),
@@ -167,13 +165,13 @@ export class WalletStore extends ComponentStore<WalletState> {
                 if (!adapter) {
                     return of(newName);
                 } else {
-                    return from(defer(() => adapter.disconnect())).pipe(map(() => newName));
+                    return from(defer(() => adapter.disconnect())).pipe(
+                        map(() => newName),
+                        catchError(() => EMPTY)
+                    );
                 }
             }),
-            tap((newName) => {
-                this._localStorage.setItem(newName);
-                this.patchState({ name: newName });
-            })
+            tap((newName) => this._name.setItem(newName))
         );
     });
 
@@ -209,9 +207,7 @@ export class WalletStore extends ComponentStore<WalletState> {
     readonly onDisconnect = this.effect(() => {
         return this.adapter$.pipe(
             isNotNull,
-            switchMap((adapter) =>
-                fromAdapterEvent(adapter, 'disconnect').pipe(tap(() => this.patchState({ name: null })))
-            )
+            switchMap((adapter) => fromAdapterEvent(adapter, 'disconnect').pipe(tap(() => this._name.setItem(null))))
         );
     });
 
@@ -243,7 +239,7 @@ export class WalletStore extends ComponentStore<WalletState> {
                 }
 
                 if (!ready) {
-                    this.patchState({ name: null });
+                    this._name.setItem(null);
 
                     if (typeof window !== 'undefined') {
                         window.open(wallet.url, '_blank');
@@ -258,7 +254,7 @@ export class WalletStore extends ComponentStore<WalletState> {
 
                 return from(defer(() => adapter.connect())).pipe(
                     catchError((error) => {
-                        this.patchState({ name: null });
+                        this._name.setItem(null);
                         return throwError(error);
                     }),
                     finalize(() => this.patchState({ connecting: false }))
@@ -274,12 +270,15 @@ export class WalletStore extends ComponentStore<WalletState> {
             filter(([disconnecting]) => !disconnecting),
             concatMap(([, adapter]) => {
                 if (!adapter) {
-                    this.patchState({ name: null });
+                    this._name.setItem(null);
                     return EMPTY;
                 } else {
                     this.patchState({ disconnecting: true });
                     return from(defer(() => adapter.disconnect())).pipe(
-                        finalize(() => this.patchState({ disconnecting: false, name: null }))
+                        finalize(() => {
+                            this._name.setItem(null);
+                            this.patchState({ disconnecting: false });
+                        })
                     );
                 }
             })

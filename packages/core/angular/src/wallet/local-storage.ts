@@ -1,30 +1,27 @@
+import { BehaviorSubject } from 'rxjs';
+
 export class LocalStorageService<T> {
-    private _value = this._defaultState;
+    private _value = new BehaviorSubject(this.getInitialValue());
+    value$ = this._value.asObservable();
 
     constructor(private _key: string, private _defaultState: T) {}
 
-    get value(): T {
+    private getInitialValue(): T {
         if (typeof localStorage === 'undefined') {
             return this._defaultState;
         }
 
-        if (this._value) {
-            return this._value;
-        }
-
         const value = localStorage.getItem(this._key);
-        if (value) {
-            this._value = JSON.parse(value) as T;
-            return this._value;
-        }
 
-        return this._defaultState;
+        return value ? (JSON.parse(value) as T) : this._defaultState;
     }
 
     setItem(newValue: T): void {
-        if (newValue === this.value) return;
+        const value = this._value.getValue();
 
-        this._value = newValue;
+        if (newValue === value) return;
+
+        this._value.next(newValue);
 
         if (newValue === null) {
             localStorage.removeItem(this._key);

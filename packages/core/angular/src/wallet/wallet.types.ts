@@ -3,7 +3,6 @@ import { PublicKey } from '@solana/web3.js';
 
 export interface WalletState {
     wallets: Wallet[];
-    name: WalletName | null;
     wallet: Wallet | null;
     adapter: ReturnType<Wallet['adapter']> | null;
     connecting: boolean;
