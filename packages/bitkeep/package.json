@@ -1,0 +1,29 @@
+{
+    "name": "@solana/wallet-adapter-bitkeep",
+    "version": "0.5.1",
+    "author": "Solana Maintainers <maintainers@solana.foundation>",
+    "repository": "https://github.com/solana-labs/wallet-adapter",
+    "license": "Apache-2.0",
+    "main": "lib/index.js",
+    "esnext": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib",
+        "src"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
+    "scripts": {
+        "clean": "rm -rf lib/*",
+        "build": "yarn clean && tsc"
+    },
+    "peerDependencies": {
+        "@solana/wallet-adapter-base": "^0.5.1",
+        "@solana/web3.js": "^1.20.0"
+    },
+    "devDependencies": {
+        "@solana/wallet-adapter-base": "^0.5.1",
+        "@solana/web3.js": "^1.20.0"
+    }
+}
