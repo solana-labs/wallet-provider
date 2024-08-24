@@ -31,6 +31,7 @@ function harden(n: number): number {
 
 const INS_GET_PUBKEY = 0x05;
 const INS_SIGN_MESSAGE = 0x06;
+const INS_SIGN_MESSAGE_OFFCHAIN = 0x07;
 
 const P1_NON_CONFIRM = 0x00;
 const P1_CONFIRM = 0x01;
@@ -63,6 +64,16 @@ export async function signTransaction(
     const data = Buffer.concat([paths, derivationPath, message]);
 
     return await send(transport, INS_SIGN_MESSAGE, P1_CONFIRM, data);
+}
+
+/** @internal */
+export async function signMessage(transport: Transport, message: Buffer, derivationPath: Buffer): Promise<Buffer> {
+    const paths = Buffer.alloc(1);
+    paths.writeUInt8(1, 0);
+
+    const data = Buffer.concat([paths, derivationPath, message]);
+
+    return await send(transport, INS_SIGN_MESSAGE_OFFCHAIN, P1_CONFIRM, data);
 }
 
 async function send(transport: Transport, instruction: number, p1: number, data: Buffer): Promise<Buffer> {
