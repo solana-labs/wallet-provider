@@ -1,5 +1,11 @@
 # @solana/wallet-adapter-trust
 
+## 0.1.14
+
+### Patch Changes
+
+-   b3797c26: Update TrustWallet icon
+
 ## 0.1.13
 
 ### Patch Changes

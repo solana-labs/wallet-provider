@@ -1,6 +1,6 @@
 {
     "name": "@solana/wallet-adapter-example",
-    "version": "0.18.36",
+    "version": "0.18.37",
     "author": "Solana Maintainers <maintainers@solana.foundation>",
     "repository": "https://github.com/anza-xyz/wallet-adapter",
     "license": "Apache-2.0",

@@ -1,6 +1,6 @@
 {
     "name": "@solana/wallet-adapter-create-react-app-starter",
-    "version": "0.1.30",
+    "version": "0.1.31",
     "author": "Solana Maintainers <maintainers@solana.foundation>",
     "repository": "https://github.com/anza-xyz/wallet-adapter",
     "license": "Apache-2.0",
