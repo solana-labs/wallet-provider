@@ -8,11 +8,11 @@ type Props = React.ComponentProps<typeof Button> & {
     walletName?: WalletName;
 };
 
-export function BaseWalletConnectionButton({ walletIcon, walletName, ...props }: Props) {
+export function BaseWalletConnectionButton({ walletIcon, walletName, className, ...props }: Props) {
     return (
         <Button
             {...props}
-            className="wallet-adapter-button-trigger"
+            className={`wallet-adapter-button-trigger ${className || ''}`}
             startIcon={
                 walletIcon && walletName ? (
                     <WalletIcon wallet={{ adapter: { icon: walletIcon, name: walletName } }} />
