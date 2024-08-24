@@ -1,5 +1,11 @@
 # @solana/wallet-adapter-keystone
 
+## 0.1.16
+
+### Patch Changes
+
+-   f326fb92: Add VersionedTransaction support to Keystone
+
 ## 0.1.15
 
 ### Patch Changes

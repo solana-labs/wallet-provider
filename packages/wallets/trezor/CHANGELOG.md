@@ -1,5 +1,11 @@
 # @solana/wallet-adapter-trezor
 
+## 0.1.3
+
+### Patch Changes
+
+-   f3721882: Update Trezor icon
+
 ## 0.1.2
 
 ### Patch Changes
