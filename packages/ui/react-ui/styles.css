@@ -218,6 +218,28 @@
     color: #fff;
 }
 
+.wallet-adapter-modal-header {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 16px;
+    margin: 0;
+    padding: 0px 24px 8px 24px;
+    text-align: left;
+    align-self: flex-start;
+    color: #fff;
+}
+
+.mobile-wallet-adapter-button {
+    background-color: #512da8;
+    font-weight: 400;
+    max-width: 85%;
+    border-radius: 16px;
+    margin: 12px 12px 36px 12px;
+    font-size: 18px;
+    justify-content: center;
+}
+
+
 @media (max-width: 374px) {
     .wallet-adapter-modal-title {
         font-size: 18px;

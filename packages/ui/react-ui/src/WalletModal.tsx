@@ -9,6 +9,8 @@ import { Collapse } from './Collapse.js';
 import { WalletListItem } from './WalletListItem.js';
 import { WalletSVG } from './WalletSVG.js';
 import { useWalletModal } from './useWalletModal.js';
+import { SolanaMobileWalletAdapterWalletName } from '@solana-mobile/wallet-adapter-mobile';
+import { Button } from './Button.js';
 
 export interface WalletModalProps {
     className?: string;
@@ -23,19 +25,23 @@ export const WalletModal: FC<WalletModalProps> = ({ className = '', container = 
     const [fadeIn, setFadeIn] = useState(false);
     const [portal, setPortal] = useState<Element | null>(null);
 
-    const [listedWallets, collapsedWallets] = useMemo(() => {
+    const [listedWallets, collapsedWallets, mobileWalletAdapter] = useMemo(() => {
         const installed: Wallet[] = [];
         const notInstalled: Wallet[] = [];
-
+        let mobileWalletAdapter;
         for (const wallet of wallets) {
-            if (wallet.readyState === WalletReadyState.Installed) {
+            if (wallet.adapter.name === SolanaMobileWalletAdapterWalletName) {
+                mobileWalletAdapter = wallet;
+            } else if (wallet.readyState === WalletReadyState.Installed) {
                 installed.push(wallet);
             } else {
                 notInstalled.push(wallet);
             }
         }
 
-        return installed.length ? [installed, notInstalled] : [notInstalled, []];
+        return installed.length
+            ? [installed, notInstalled, mobileWalletAdapter]
+            : [notInstalled, [], mobileWalletAdapter];
     }, [wallets]);
 
     const hideModal = useCallback(() => {
@@ -137,16 +143,40 @@ export const WalletModal: FC<WalletModalProps> = ({ className = '', container = 
                         {listedWallets.length ? (
                             <>
                                 <h1 className="wallet-adapter-modal-title">Connect a wallet on Solana to continue</h1>
+                                {mobileWalletAdapter && (
+                                    <>
+                                        <h2 className="wallet-adapter-modal-header">On your phone: </h2>
+                                        <Button
+                                            className="mobile-wallet-adapter-button"
+                                            onClick={(event) =>
+                                                handleWalletClick(event, mobileWalletAdapter.adapter.name)
+                                            }
+                                        >
+                                            <span>Use an installed wallet</span>
+                                        </Button>
+                                    </>
+                                )}
                                 <ul className="wallet-adapter-modal-list">
-                                    {listedWallets.map((wallet) => (
-                                        <WalletListItem
-                                            key={wallet.adapter.name}
-                                            handleClick={(event) => handleWalletClick(event, wallet.adapter.name)}
-                                            wallet={wallet}
-                                        />
-                                    ))}
+                                    {mobileWalletAdapter && !collapsedWallets.length && (
+                                        <h2 className="wallet-adapter-modal-header">Other wallets: </h2>
+                                    )}
+                                    {listedWallets.map((wallet) => {
+                                        if (wallet.adapter.name === SolanaMobileWalletAdapterWalletName) {
+                                            return;
+                                        }
+                                        return (
+                                            <WalletListItem
+                                                key={wallet.adapter.name}
+                                                handleClick={(event) => handleWalletClick(event, wallet.adapter.name)}
+                                                wallet={wallet}
+                                            />
+                                        );
+                                    })}
                                     {collapsedWallets.length ? (
                                         <Collapse expanded={expanded} id="wallet-adapter-modal-collapse">
+                                            {mobileWalletAdapter && listedWallets.length === 1 && (
+                                                <h2 className="wallet-adapter-modal-header">Other wallets: </h2>
+                                            )}
                                             {collapsedWallets.map((wallet) => (
                                                 <WalletListItem
                                                     key={wallet.adapter.name}
