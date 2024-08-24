@@ -66,7 +66,7 @@ export function WalletProvider({
                 uri: getUriForAppIdentity(),
             },
             authorizationResultCache: createDefaultAuthorizationResultCache(),
-            cluster: getInferredClusterFromEndpoint(connection?.rpcEndpoint),
+            chain: getInferredClusterFromEndpoint(connection?.rpcEndpoint),
             onWalletNotFound: createDefaultWalletNotFoundHandler(),
         });
     }, [adaptersWithStandardAdapters, connection?.rpcEndpoint]);
