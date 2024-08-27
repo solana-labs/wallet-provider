@@ -1,6 +1,7 @@
 import type { EventEmitter, SendTransactionOptions, WalletName } from '@solana/wallet-adapter-base';
 import {
     BaseMessageSignerWalletAdapter,
+    isIosAndRedirectable,
     isVersionedTransaction,
     scopePollingDetectionStrategy,
     WalletAccountError,
@@ -19,9 +20,9 @@ import type {
     Connection,
     SendOptions,
     Transaction,
-    VersionedTransaction,
     TransactionSignature,
     TransactionVersion,
+    VersionedTransaction,
 } from '@solana/web3.js';
 import { PublicKey } from '@solana/web3.js';
 
@@ -75,6 +76,11 @@ export class CoinbaseWalletAdapter extends BaseMessageSignerWalletAdapter {
         this._publicKey = null;
 
         if (this._readyState !== WalletReadyState.Unsupported) {
+            if (isIosAndRedirectable()) {
+                // when in iOS (not webview), set Coinbase as loadable instead of checking for install
+                this._readyState = WalletReadyState.Loadable;
+                this.emit('readyStateChange', this._readyState);
+            }
             scopePollingDetectionStrategy(() => {
                 if (window?.coinbaseSolana) {
                     this._readyState = WalletReadyState.Installed;
@@ -98,9 +104,26 @@ export class CoinbaseWalletAdapter extends BaseMessageSignerWalletAdapter {
         return this._readyState;
     }
 
+    async autoConnect(): Promise<void> {
+        // Skip autoconnect in the Loadable state
+        // We can't redirect to a universal link without user input
+        if (this.readyState === WalletReadyState.Installed) {
+            await this.connect();
+        }
+    }
+
     async connect(): Promise<void> {
         try {
             if (this.connected || this.connecting) return;
+
+            if (this.readyState === WalletReadyState.Loadable) {
+                // redirect to the Coinbase /browse universal link
+                // this will open the current URL in the Coinbase in-app browser
+                const url = encodeURIComponent(window.location.href);
+                window.location.href = `https://go.cb-w.com/dapp?cb_url=${url}`;
+                return;
+            }
+
             if (this._readyState !== WalletReadyState.Installed) throw new WalletNotReadyError();
 
             this._connecting = true;
