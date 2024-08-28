@@ -16,7 +16,7 @@ import { WalletProviderBase } from './WalletProviderBase.js';
 
 export interface WalletProviderProps {
     children: ReactNode;
-    wallets: Adapter[];
+    wallets: readonly Adapter[];
     autoConnect?: boolean | ((adapter: Adapter) => Promise<boolean>);
     localStorageKey?: string;
     onError?: (error: WalletError, adapter?: Adapter) => void;
@@ -49,7 +49,7 @@ export function WalletProvider({
     onError,
 }: WalletProviderProps) {
     const { connection } = useConnection();
-    const adaptersWithStandardAdapters = useStandardWalletAdapters(adapters);
+    const adaptersWithStandardAdapters = useStandardWalletAdapters(adapters as Adapter[]);
     const mobileWalletAdapter = useMemo(() => {
         if (!getIsMobile(adaptersWithStandardAdapters)) {
             return null;
