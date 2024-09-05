@@ -201,7 +201,32 @@ describe('WalletProvider when the environment is `MOBILE_WEB`', () => {
             expect(jest.mocked(SolanaMobileWalletAdapter).mock.calls[0][0].cluster).toBe('fake-cluster-for-test');
         });
     });
-
+    describe('when another wallet adapter is supplied in the adapters array', () => {
+        beforeEach(() => {
+            adapters.push(new FooWalletAdapter());
+        });
+        it('does not load the mobile wallet adapter into state as the default', () => {
+            renderTest({});
+            expect(ref.current?.getWalletContextState().wallet?.adapter.name).toBe(undefined);
+        });
+        it('loads no public key into state', () => {
+            renderTest({});
+            expect(ref.current?.getWalletContextState().publicKey).toBeNull();
+        });
+    });
+    describe('when no wallet adapter is supplied in the adapters array', () => {
+        beforeEach(() => {
+            adapters = [];
+        });
+        it('does load the mobile wallet adapter into state as the default', () => {
+            renderTest({});
+            expect(ref.current?.getWalletContextState().wallet?.adapter.name).toBe(SolanaMobileWalletAdapterWalletName);
+        });
+        it('loads no public key into state', () => {
+            renderTest({});
+            expect(ref.current?.getWalletContextState().publicKey).toBeNull();
+        });
+    });
     describe('when a custom mobile wallet adapter is supplied in the adapters array', () => {
         let customAdapter: Adapter;
         const CUSTOM_APP_IDENTITY = {
@@ -219,26 +244,13 @@ describe('WalletProvider when the environment is `MOBILE_WEB`', () => {
             adapters.push(customAdapter);
             jest.clearAllMocks();
         });
-        it('loads the custom mobile wallet adapter into state as the default', () => {
+        it('does not load the custom mobile wallet adapter into state as the default', () => {
             renderTest({});
-            expect(ref.current?.getWalletContextState().wallet?.adapter).toBe(customAdapter);
+            expect(ref.current?.getWalletContextState().wallet?.adapter).toBe(undefined);
         });
         it('does not construct any further mobile wallet adapters', () => {
             renderTest({});
             expect(jest.mocked(SolanaMobileWalletAdapter).mock.calls.length).toBe(0);
-        });
-    });
-    describe('when there exists no stored wallet name', () => {
-        beforeEach(() => {
-            localStorage.removeItem(WALLET_NAME_CACHE_KEY);
-        });
-        it('loads the mobile wallet adapter into state as the default', () => {
-            renderTest({});
-            expect(ref.current?.getWalletContextState().wallet?.adapter.name).toBe(SolanaMobileWalletAdapterWalletName);
-        });
-        it('loads no public key into state', () => {
-            renderTest({});
-            expect(ref.current?.getWalletContextState().publicKey).toBeNull();
         });
     });
     describe('when there exists a stored wallet name', () => {
@@ -326,14 +338,18 @@ describe('WalletProvider when the environment is `MOBILE_WEB`', () => {
     describe('onError', () => {
         let onError: jest.Mock;
         let errorThrown: WalletError;
-        beforeEach(() => {
+        beforeEach(async () => {
             errorThrown = new WalletError('o no');
             onError = jest.fn();
             renderTest({ onError });
+            await act(async () => {
+                ref.current?.getWalletContextState().select(SolanaMobileWalletAdapterWalletName);
+                await Promise.resolve(); // Flush all promises in effects after calling `select()`.
+            });
         });
         describe('when the wallet emits an error', () => {
             let adapter: Adapter;
-            beforeEach(() => {
+            beforeEach(async () => {
                 act(() => {
                     adapter = ref.current?.getWalletContextState().wallet?.adapter as SolanaMobileWalletAdapter;
                     adapter.emit('error', errorThrown);
@@ -452,8 +468,8 @@ describe('WalletProvider when the environment is `MOBILE_WEB`', () => {
                         mobileWalletAdapter.disconnect();
                     });
                 });
-                it('should not clear the stored wallet name', () => {
-                    expect(localStorage.removeItem).not.toHaveBeenCalled();
+                it('should clear the stored wallet name', () => {
+                    expect(localStorage.removeItem).toHaveBeenCalled();
                 });
             });
             describe('when window beforeunload event fires', () => {
@@ -470,8 +486,8 @@ describe('WalletProvider when the environment is `MOBILE_WEB`', () => {
                             mobileWalletAdapter.disconnect();
                         });
                     });
-                    it('should not clear the stored wallet name', () => {
-                        expect(localStorage.removeItem).not.toHaveBeenCalled();
+                    it('should clear the stored wallet name', () => {
+                        expect(localStorage.removeItem).toHaveBeenCalled();
                     });
                     it('should clear out the state', () => {
                         expect(ref.current?.getWalletContextState()).toMatchObject({
