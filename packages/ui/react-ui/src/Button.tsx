@@ -22,7 +22,7 @@ export const Button: FC<ButtonProps> = (props) => {
             type="button"
         >
             {props.startIcon && <i className="wallet-adapter-button-start-icon">{props.startIcon}</i>}
-            {props.children}
+            <span className="wallet-adapter-button-span">{props.children}</span>
             {props.endIcon && <i className="wallet-adapter-button-end-icon">{props.endIcon}</i>}
         </button>
     );

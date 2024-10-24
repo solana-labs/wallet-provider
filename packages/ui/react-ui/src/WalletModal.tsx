@@ -166,7 +166,7 @@ export const WalletModal: FC<WalletModalProps> = ({ className = '', container = 
                                         onClick={handleCollapseClick}
                                         tabIndex={0}
                                     >
-                                        <span>{expanded ? 'Less ' : 'More '}options</span>
+                                        <span>{`${expanded ? 'Less' : 'More'} options`}</span>
                                         <svg
                                             width="13"
                                             height="7"
@@ -196,7 +196,9 @@ export const WalletModal: FC<WalletModalProps> = ({ className = '', container = 
                                             onClick={handleCollapseClick}
                                             tabIndex={0}
                                         >
-                                            <span>{expanded ? 'Hide ' : 'Already have a wallet? View '}options</span>
+                                            <span>
+                                                {`${expanded ? 'Hide' : 'Already have a wallet? View'} options`}
+                                            </span>
                                             <svg
                                                 width="13"
                                                 height="7"

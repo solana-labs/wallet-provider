@@ -162,7 +162,7 @@ export const WalletDialog: FC<WalletDialogProps> = ({
                             </Collapse>
                             <ListItem>
                                 <Button onClick={handleExpandClick}>
-                                    {expanded ? 'Less' : 'More'} options
+                                    {`${expanded ? 'Less' : 'More'} options`}
                                     {expanded ? <CollapseIcon /> : <ExpandIcon />}
                                 </Button>
                             </ListItem>

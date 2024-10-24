@@ -245,7 +245,12 @@
     height: 28px;
 }
 
-.wallet-adapter-modal-list .wallet-adapter-button span {
+.wallet-adapter-modal-list .wallet-adapter-button-span {
+    display: inline-flex;
+    flex-basis: 100%;
+}
+
+.wallet-adapter-modal-list .wallet-adapter-button-span .detected {
     margin-left: auto;
     font-size: 14px;
     opacity: .6;
