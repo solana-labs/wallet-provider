@@ -144,6 +144,9 @@
         },
         {
             "path": "./packages/wallets/xdefi/tsconfig.json"
+        },
+        {
+            "path": "./packages/wallets/iframe/tsconfig.json"
         }
     ]
 }

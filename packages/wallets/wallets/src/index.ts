@@ -32,5 +32,6 @@ export * from '@solana/wallet-adapter-torus';
 export * from '@solana/wallet-adapter-trezor';
 export * from '@solana/wallet-adapter-trust';
 export * from '@solana/wallet-adapter-unsafe-burner';
+export * from '@solana/wallet-adapter-iframe';
 export * from '@solana/wallet-adapter-walletconnect';
 export * from '@solana/wallet-adapter-xdefi';

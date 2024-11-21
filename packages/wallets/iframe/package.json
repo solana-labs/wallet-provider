@@ -1,0 +1,44 @@
+{
+    "name": "@solana/wallet-adapter-iframe",
+    "version": "0.1.0",
+    "author": "Solana Maintainers <maintainers@solana.foundation>",
+    "repository": "https://github.com/anza-xyz/wallet-adapter",
+    "license": "Apache-2.0",
+    "publishConfig": {
+        "access": "public"
+    },
+    "files": [
+        "lib",
+        "src",
+        "LICENSE"
+    ],
+    "engines": {
+        "node": ">=18"
+    },
+    "type": "module",
+    "sideEffects": false,
+    "main": "./lib/cjs/index.js",
+    "module": "./lib/esm/index.js",
+    "types": "./lib/types/index.d.ts",
+    "exports": {
+        "require": "./lib/cjs/index.js",
+        "import": "./lib/esm/index.js",
+        "types": "./lib/types/index.d.ts"
+    },
+    "scripts": {
+        "build": "tsc --build --verbose && pnpm run package",
+        "clean": "shx mkdir -p lib && shx rm -rf lib",
+        "lint": "prettier --check 'src/{*,**/*}.{ts,tsx,js,jsx,json}' && eslint",
+        "package": "shx mkdir -p lib/cjs && shx echo '{ \"type\": \"commonjs\" }' > lib/cjs/package.json"
+    },
+    "peerDependencies": {
+        "@solana/web3.js": "^1.77.3"
+    },
+    "dependencies": {
+        "@solana/wallet-adapter-base": "workspace:^"
+    },
+    "devDependencies": {
+        "@solana/web3.js": "^1.77.3",
+        "shx": "^0.3.4"
+    }
+}
