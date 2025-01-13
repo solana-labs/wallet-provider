@@ -12,10 +12,11 @@ import {
     WalletPublicKeyError,
     WalletReadyState,
     WalletSignTransactionError,
+    WalletSignMessageError,
 } from '@solana/wallet-adapter-base';
 import type { PublicKey, Transaction, TransactionVersion, VersionedTransaction } from '@solana/web3.js';
 import './polyfills/index.js';
-import { getDerivationPath, getPublicKey, signTransaction } from './util.js';
+import { getDerivationPath, getPublicKey, signTransaction, signMessage, OffchainMessage } from './util.js';
 
 export interface LedgerWalletAdapterConfig {
     derivationPath?: Buffer;
@@ -136,6 +137,24 @@ export class LedgerWalletAdapter extends BaseSignerWalletAdapter {
             }
 
             return transaction;
+        } catch (error: any) {
+            this.emit('error', error);
+            throw error;
+        }
+    }
+
+    async signMessage(message: Uint8Array): Promise<Uint8Array> {
+        try {
+            try {
+                const transport = this._transport;
+                if (!transport) throw new WalletNotConnectedError();
+
+                const offchainMessage = new OffchainMessage({ message: Buffer.from(message.buffer) });
+                const signature = await signMessage(transport, offchainMessage.serialize(), this._derivationPath);
+                return new Uint8Array(signature);
+            } catch (error: any) {
+                throw new WalletSignMessageError(error?.message, error);
+            }
         } catch (error: any) {
             this.emit('error', error);
             throw error;
