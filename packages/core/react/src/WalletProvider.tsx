@@ -76,10 +76,7 @@ export function WalletProvider({
         }
         return [mobileWalletAdapter, ...adaptersWithStandardAdapters];
     }, [adaptersWithStandardAdapters, mobileWalletAdapter]);
-    const [walletName, setWalletName] = useLocalStorage<WalletName | null>(
-        localStorageKey,
-        getIsMobile(adaptersWithStandardAdapters) ? SolanaMobileWalletAdapterWalletName : null
-    );
+    const [walletName, setWalletName] = useLocalStorage<WalletName | null>(localStorageKey, null);
     const adapter = useMemo(
         () => adaptersWithMobileWalletAdapter.find((a) => a.name === walletName) ?? null,
         [adaptersWithMobileWalletAdapter, walletName]
@@ -105,8 +102,6 @@ export function WalletProvider({
         if (!adapter) return;
         function handleDisconnect() {
             if (isUnloadingRef.current) return;
-            // Leave the adapter selected in the event of a disconnection.
-            if (walletName === SolanaMobileWalletAdapterWalletName && getIsMobile(adaptersWithStandardAdapters)) return;
             setWalletName(null);
         }
         adapter.on('disconnect', handleDisconnect);
@@ -150,7 +145,7 @@ export function WalletProvider({
         };
     }, [adaptersWithStandardAdapters, walletName]);
     const handleConnectError = useCallback(() => {
-        if (adapter && adapter.name !== SolanaMobileWalletAdapterWalletName) {
+        if (adapter) {
             // If any error happens while connecting, unset the adapter.
             changeWallet(null);
         }
